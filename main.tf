@@ -31,14 +31,14 @@ data "azurerm_subnet" "subnet" {
 
 # Resource group for arc private endpoint
 resource "azurerm_resource_group" "arcsvc-rg" {
-  name     = "azdemo-uks-rg-arcsvc"                                   # This is the name of the Resource Group for the cognitive Service
+  name     = "azdemo-uks-rg-arcsvc"                                   # This is the name of the Resource Group for the Azure ARC Service
   location = "uksouth"                                                # This is the region the service will be delployed in to  
   tags     = var.tags
 }
 
 # Resource group for servers to be added to 
 resource "azurerm_resource_group" "arc-servers-rg" {
-  name     = "azdemo-uks-rg-arc-servers"                                   # This is the name of the Resource Group for the cognitive Service
+  name     = "azdemo-uks-rg-arc-servers"                                   # This is the name of the Resource Group for the Azure ARC Servers
   location = "uksouth"                                                # This is the region the service will be delployed in to  
   tags     = var.tags
 }
@@ -51,7 +51,7 @@ resource "azurerm_arc_private_link_scope" "demo-arc-pls" {
   tags                          = var.tags
 }
 
-# Builds the Private endpoint for the cognitive service
+# Builds the Private endpoint for the Azure ARC Service
 resource "azurerm_private_endpoint" "arc-pe" {
   name                = "azdemo-uks-ple-arc01"       # this is the name of the Private EndPoint
   location            = azurerm_resource_group.arcsvc-rg.location
@@ -65,7 +65,7 @@ resource "azurerm_private_endpoint" "arc-pe" {
     subresource_names              = ["hybridcompute"]
     }
     tags = var.tags
- # Ignore, because managed by DeployIfNotExists policy 
+# Ignore, because managed by DeployIfNotExists policy 
   lifecycle {
     ignore_changes = [
       private_dns_zone_group,
