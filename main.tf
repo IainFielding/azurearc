@@ -44,7 +44,33 @@ resource "azurerm_resource_group" "arc-servers-rg" {
 }
 
 resource "azurerm_arc_private_link_scope" "demo-arc-pls" {
-  name                = "azdemo-uks-pls-arc01"
-  resource_group_name = azurerm_resource_group.arcsvc-rg.name
-  location            = azurerm_resource_group.arcsvc-rg.location
+  name                          = "azdemo-uks-pls-arc01"
+  resource_group_name           = azurerm_resource_group.arcsvc-rg.name
+  location                      = azurerm_resource_group.arcsvc-rg.location
+  public_network_access_enabled = false
+  tags                          = var.tags
 }
+
+# Builds the Private endpoint for the cognitive service
+resource "azurerm_private_endpoint" "arc-pe" {
+  name                = "azdemo-uks-ple-arc01"       # this is the name of the Private EndPoint
+  location            = azurerm_resource_group.arcsvc-rg.location
+  resource_group_name = azurerm_resource_group.arcsvc-rg.name
+  subnet_id           = data.azurerm_subnet.subnet.id
+
+  private_service_connection {
+    name                           = "azdemo-uks-psc-arc01"    # This is the name of the private service connection
+    private_connection_resource_id = azurerm_arc_private_link_scope.demo-arc-pls.id
+    is_manual_connection           = false
+    subresource_names              = ["hybridcompute"]
+    }
+    tags = var.tags
+ # Ignore, because managed by DeployIfNotExists policy 
+  lifecycle {
+    ignore_changes = [
+      private_dns_zone_group,
+      custom_dns_configs,
+      network_interface        
+    ]
+  }
+  }
