@@ -43,4 +43,8 @@ resource "azurerm_resource_group" "arc-servers-rg" {
   tags     = var.tags
 }
 
-
+resource "azurerm_arc_private_link_scope" "demo-arc-pls" {
+  name                = "azdemo-uks-pls-arc01"
+  resource_group_name = azurerm_resource_group.arcsvc-rg.name
+  location            = azurerm_resource_group.arcsvc-rg.location
+}
