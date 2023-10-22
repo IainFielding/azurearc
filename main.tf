@@ -69,7 +69,6 @@ resource "azurerm_private_endpoint" "arc-pe" {
   lifecycle {
     ignore_changes = [
       private_dns_zone_group,
-      custom_dns_configs,
       network_interface        
     ]
   }
